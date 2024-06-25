@@ -23,12 +23,19 @@ balle.vitesse_y = 2
 local largeurEcran, hauteurEcran
 local balleSortie 
 
+function departBalle()
+    balle.x = pad.x + pad.largeur + 1
+    balle.y = pad.y + pad.hauteur/2 - balle.hauteur/2
+    balle.vitesse_x = 0
+    balle.vitesse_y = 0
+end
+
 
 function love.load()
     largeurEcran = love.graphics.getWidth()
     hauteurEcran = love.graphics.getHeight() 
-
     balleSortie = true
+    departBalle()
 
     --balle.x = largeurEcran/2 - balle.largeur/2
     --balle.y = hauteurEcran/2 - balle.hauteur/2
@@ -67,13 +74,10 @@ function love.update(dt)
     --balle sortie 
     --on repositionne balle sur la raquette
     if balle.x < 0 then 
-        balleSortie = true    
+        balleSortie = true   
     end
     if balleSortie then
-        balle.x = pad.x + pad.largeur + 1
-        balle.y = pad.y + pad.hauteur/2 - balle.hauteur/2
-        balle.vitesse_x = 0
-        balle.vitesse_y = 0
+        departBalle()
     end
 
     balle.x = balle.x + balle.vitesse_x
