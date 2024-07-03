@@ -6,6 +6,8 @@ end
 -- Cette ligne permet d'afficher des traces dans la console pendant l'éxécution
 io.stdout:setvbuf("no")
 
+local font = love.graphics.newFont(20) -- font (nécessaire pour mesurer l'affichage des textes)
+
 pad = {}
 pad.x = 1
 pad.y = 1
@@ -104,8 +106,13 @@ function love.update(dt)
 
     --balle sortie 
     --on repositionne balle sur la raquette
-    if balle.x < 0 or balle.x >= (largeurEcran - balle.largeur) then 
-        balleSortie = true   
+    if balle.x < 0  then 
+        balleSortie = true  
+        score_joueur2 = score_joueur2 + 1 
+    end
+    if balle.x >= (largeurEcran - balle.largeur) then 
+        balleSortie = true
+        score_joueur1 = score_joueur1 + 1
     end
     if balleSortie then
         departBalle()
@@ -116,13 +123,21 @@ function love.update(dt)
 end
 
 function love.draw()
+    --love.graphics.setFont(font)
    love.graphics.rectangle("fill", pad.x, pad.y, pad.largeur, pad.hauteur) 
    love.graphics.rectangle("fill", pad2.x, pad2.y, pad2.largeur, pad2.hauteur) 
 
    love.graphics.rectangle("fill", balle.x, balle.y, balle.largeur, balle.hauteur)
 
-    local score = score_joueur1.." - "..score_joueur2
-    love.graphics.print(score,(largeurEcran/2 -score.getWidth()/2), 1)
+    love.graphics.print(score_joueur1, font ,(largeurEcran/4), 1)
+    love.graphics.print(score_joueur2, font ,(largeurEcran/4) * 3, 1)
+
+    -- partie milieu qui coupe ecran en deux
+    local positionY = 1
+    while positionY <= (hauteurEcran - font:getHeight()) do
+        love.graphics.print("|", font, (largeurEcran/2), positionY )
+        positionY = positionY + (1 + font:getHeight())
+    end
 
 end
 
