@@ -20,19 +20,23 @@ pad2.y = 1
 pad2.largeur = 20
 pad2.hauteur = 80
 
+vitesseInitiale = 6
+
 balle = {}
 balle.x = 0
 balle.y = 0
 balle.largeur = 20
 balle.hauteur = 20
-balle.vitesse_x = 2
-balle.vitesse_y = 2
+balle.vitesse_x = vitesseInitiale
+balle.vitesse_y = vitesseInitiale
 
 local largeurEcran, hauteurEcran
 local balleSortie 
 
 score_joueur1 = 0
 score_joueur2 = 0
+
+listeTrainee = {}
 
 function departBalle()
     balle.x = pad.x + pad.largeur + 1
@@ -57,23 +61,23 @@ end
 function love.update(dt)
     if love.keyboard.isDown("q") then
         if pad.y < (hauteurEcran - (pad.hauteur + 1)) then
-            pad.y = pad.y + 3
+            pad.y = pad.y + vitesseInitiale
         end
     end
     if love.keyboard.isDown("a") then
         if pad.y > 1 then
-            pad.y = pad.y - 3
+            pad.y = pad.y - vitesseInitiale
         end
     end
 
     if love.keyboard.isDown("down") then
         if pad2.y < (hauteurEcran - (pad2.hauteur + 1)) then
-            pad2.y = pad2.y + 3
+            pad2.y = pad2.y + vitesseInitiale
         end
     end
     if love.keyboard.isDown("up") then
         if pad2.y > 1 then
-            pad2.y = pad2.y - 3
+            pad2.y = pad2.y - vitesseInitiale
         end
     end
 
@@ -118,6 +122,20 @@ function love.update(dt)
         departBalle()
     end
 
+    -- gestion de la trainee
+    for n=#listeTrainee,1,-1 do
+        listeTrainee[n].vie = listeTrainee[n].vie - dt
+        if listeTrainee[n].vie <= 0 then
+            table.remove(listeTrainee, n)
+        end
+    end
+
+    local maTrainee = {}
+    maTrainee.x = balle.x
+    maTrainee.y = balle.y
+    maTrainee.vie = 0.5
+    table.insert(listeTrainee, maTrainee)
+    
     balle.x = balle.x + balle.vitesse_x
     balle.y = balle.y + balle.vitesse_y
 end
@@ -127,6 +145,14 @@ function love.draw()
    love.graphics.rectangle("fill", pad.x, pad.y, pad.largeur, pad.hauteur) 
    love.graphics.rectangle("fill", pad2.x, pad2.y, pad2.largeur, pad2.hauteur) 
 
+   --dessin de la trainee
+   for n=1,#listeTrainee do
+    love.graphics.setColor(1,1,1,listeTrainee[n].vie/2)  -- avec opacite reduite
+    love.graphics.rectangle("fill", listeTrainee[n].x,listeTrainee[n].y, balle.largeur, balle.hauteur)
+   end
+
+   --dessin de la balle
+   love.graphics.setColor(1,1,1,1)
    love.graphics.rectangle("fill", balle.x, balle.y, balle.largeur, balle.hauteur)
 
     love.graphics.print(score_joueur1, font ,(largeurEcran/4), 1)
@@ -142,9 +168,9 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if key == "space" then
+    if key == "space" and balleSortie then
         balleSortie = false
-        balle.vitesse_x = 2
-        balle.vitesse_y = 2
+        balle.vitesse_x = vitesseInitiale
+        balle.vitesse_y = vitesseInitiale
     end
 end
