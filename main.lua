@@ -20,7 +20,7 @@ pad2.y = 1
 pad2.largeur = 20
 pad2.hauteur = 80
 
-vitesseInitiale = 6
+vitesseInitiale = 3
 
 balle = {}
 balle.x = 0
@@ -125,6 +125,9 @@ function love.update(dt)
     -- gestion de la trainee
     for n=#listeTrainee,1,-1 do
         listeTrainee[n].vie = listeTrainee[n].vie - dt
+        --pour faire trainee dans tous les sens
+        listeTrainee[n].x = listeTrainee[n].x + listeTrainee[n].vx 
+        listeTrainee[n].y = listeTrainee[n].y + listeTrainee[n].vy 
         if listeTrainee[n].vie <= 0 then
             table.remove(listeTrainee, n)
         end
@@ -133,7 +136,12 @@ function love.update(dt)
     local maTrainee = {}
     maTrainee.x = balle.x
     maTrainee.y = balle.y
-    maTrainee.vie = 0.5
+    maTrainee.vx = math.random(-1,1)
+    maTrainee.vy = math.random(-1,1)
+    maTrainee.r = math.random()
+    maTrainee.v = math.random()
+    maTrainee.b = math.random()
+    maTrainee.vie = 1
     table.insert(listeTrainee, maTrainee)
     
     balle.x = balle.x + balle.vitesse_x
@@ -147,8 +155,13 @@ function love.draw()
 
    --dessin de la trainee
    for n=1,#listeTrainee do
-    love.graphics.setColor(1,1,1,listeTrainee[n].vie/2)  -- avec opacite reduite
-    love.graphics.rectangle("fill", listeTrainee[n].x,listeTrainee[n].y, balle.largeur, balle.hauteur)
+    --love.graphics.setColor(1,1,1,listeTrainee[n].vie/2)  -- avec opacite reduite
+    --love.graphics.rectangle("fill", listeTrainee[n].x,listeTrainee[n].y, balle.largeur, balle.hauteur)
+
+    -- pour faire des bulles bleues
+    --love.graphics.setColor(0.5,0.5,1,listeTrainee[n].vie/2)
+    love.graphics.setColor(listeTrainee[n].r,listeTrainee[n].b,listeTrainee[n].b,listeTrainee[n].vie/2)
+    love.graphics.circle("line",listeTrainee[n].x + balle.largeur/2, listeTrainee[n].y + balle.hauteur/2, 5)
    end
 
    --dessin de la balle
