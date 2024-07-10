@@ -160,7 +160,7 @@ function love.draw()
 
     -- pour faire des bulles bleues
     --love.graphics.setColor(0.5,0.5,1,listeTrainee[n].vie/2)
-    love.graphics.setColor(listeTrainee[n].r,listeTrainee[n].b,listeTrainee[n].b,listeTrainee[n].vie/2)
+    love.graphics.setColor(listeTrainee[n].r,listeTrainee[n].v,listeTrainee[n].b,listeTrainee[n].vie/2)
     love.graphics.circle("line",listeTrainee[n].x + balle.largeur/2, listeTrainee[n].y + balle.hauteur/2, 5)
    end
 
